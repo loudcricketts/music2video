@@ -12,11 +12,30 @@ class MusicVideo:
         song_album: str = None,
         song_artist: str = None,
         output_basename_format: str = "[ARTIST] TITLE",
-        ffprobe_path: Path = Path("ffprobe"),
+        ffprobe_path: Path = Path("ffprobe").expanduser(),
     ):
-        self.ffprobe_path: Path = ffprobe_path
-        self.music_file: Path = music_file
-        self.cover_file: Path = cover_file
+        self.ffprobe_path: str = str(ffprobe_path)
+        self.music_file: str = str(music_file)
+        self.cover_file: str = str(cover_file)
+        # Get the length of the song
+        self.song_length: float = (
+            run(
+                [
+                    self.ffprobe_path,
+                    "-i",
+                    self.music_file,
+                    "-show_entries",
+                    "format=duration",
+                    "-v",
+                    "quiet",
+                    "-of",
+                    "csv=p=0",
+                ],
+                capture_output=True,
+            )
+            .stdout.decode()
+            .replace("\n", "")
+        )
         # Get the song title from the music file, unless specified
         if song_title:
             self.song_title: str = song_title
@@ -30,7 +49,7 @@ class MusicVideo:
                         "-show_entries",
                         "format_tags=title",
                         "-of",
-                        "default=nw=1:nk=1",
+                        "default=noprint_wrappers=1:nokey=1",
                         self.music_file,
                     ],
                     capture_output=True,
@@ -80,9 +99,29 @@ class MusicVideo:
                 .stdout.decode()
                 .replace("\n", "")
             )
-        self.output_basename: str = output_basename_format
-        self.output_basename = (
-            self.output_basename.replace("ARTIST", self.song_artist)
+        # Album Artist doesn't exist, so using Artist
+        if not song_artist:
+            self.song_artist: str = str(
+                run(
+                    [
+                        self.ffprobe_path,
+                        "-v",
+                        "error",
+                        "-show_entries",
+                        "format_tags=artist",
+                        "-of",
+                        "default=nw=1:nk=1",
+                        self.music_file,
+                    ],
+                    capture_output=True,
+                )
+                .stdout.decode()
+                .replace("\n", "")
+            )
+
+        # Format the basename according to the input provided
+        self.output_basename: str = (
+            output_basename_format.replace("ARTIST", self.song_artist)
             .replace("TITLE", self.song_title)
             .replace("ALBUM", self.song_album)
         )

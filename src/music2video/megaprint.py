@@ -31,7 +31,7 @@ class Printer:
             if message_level > self.logging_level:
                 return
             if self.show_timestamp:
-                timestamp = "⦅" + datetime.now().strftime("%H:%M:%S") + "⦆"
+                timestamp = "[" + datetime.now().strftime("%H:%M:%S") + "]"
             else:
                 timestamp = ""
 
