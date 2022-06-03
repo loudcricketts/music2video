@@ -56,6 +56,7 @@ class MusicVideo:
                 )
                 .stdout.decode()
                 .replace("\n", "")
+                .replace("\r", "")
             )
         # Get the song album from the music file, unless specified
         if song_album:
@@ -77,6 +78,7 @@ class MusicVideo:
                 )
                 .stdout.decode()
                 .replace("\n", "")
+                .replace("\r", "")
             )
         # Get the song artist from the music file, unless specified
         if song_artist:
@@ -98,6 +100,7 @@ class MusicVideo:
                 )
                 .stdout.decode()
                 .replace("\n", "")
+                .replace("\r", "")
             )
         # Album Artist doesn't exist, so using Artist
         if not song_artist:
@@ -117,6 +120,7 @@ class MusicVideo:
                 )
                 .stdout.decode()
                 .replace("\n", "")
+                .replace("\r", "")
             )
 
         # Format the basename according to the input provided

@@ -1,5 +1,6 @@
 from src.music2video.musicvideo import MusicVideo
 from pathlib import Path
+import math
 from subprocess import run
 
 
@@ -39,11 +40,11 @@ class VideoGenerator:
             "-i",
             f"file:{str(self.vidinfo.cover_file)}",
             "-t",
-            str(vidinfo.song_length),
+            str(math.ceil(float(vidinfo.song_length))),
             "-i",
             f"file:{str(self.vidinfo.music_file)}",
             "-t",
-            str(vidinfo.song_length),
+            str(math.ceil(float(vidinfo.song_length))),
         ]
         self.filter_command_fragment: list() = [
             "-filter_complex",
@@ -75,7 +76,7 @@ class VideoGenerator:
             # "shortest",
             "-max_interleave_delta",
             "200M",
-            f"{str(output_directory)}/{vidinfo.output_basename}.{video_file_container}",
+            f"{str(Path.joinpath(output_directory, str(vidinfo.output_basename + '.' + video_file_container)))}",
         ]
 
     def make_video(self):
