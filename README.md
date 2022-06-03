@@ -10,6 +10,14 @@ usage: main.py [-h] [-m FILE] [-i FILE] [--title TRACK_TITLE] [--artist TRACK_AR
 Quickly create still image music videos
 
 options:
+usage: main.py [-h] [-m FILE] [-i FILE] [--title TRACK_TITLE] [--artist TRACK_ARTIST] [--album TRACK_ALBUM] [--format CUSTOM_FORMAT_STRING]
+               [--ffprobe CUSTOM_FFPROBE_PATH] [--ffmpeg CUSTOM_FFMPEG_PATH] [--outdir OUTPUT_DIRECTORY] [--fps FPS_FLOAT] [--vres VERTICAL_RESOLUTION_INT]
+               [--display-text TEXT] [--font FONT_NAME] [--pos TEXT_POSITION] [--video-codec VIDEO_CODEC_PARAMS] [--audio-codec AUDIO_CODEC_PARAMS]
+               [--container FILE_CONTAINER] [--end-padding PADDING_IN_SECONDS] [--verbosity VERBOSITY_LEVEL] [--timestamps BOOL]
+
+Quickly create still image music videos
+
+options:
   -h, --help            show this help message and exit
   -m FILE, --music-file FILE
                         Path to the song to use
@@ -41,6 +49,9 @@ options:
                         Use the specified container format (mkv is a good choice)
   --end-padding PADDING_IN_SECONDS
                         Add extra time to the end of the video
+  --verbosity VERBOSITY_LEVEL
+                        How verbose to print (between 0 and 3)
+  --timestamps BOOL     Show timestamps on output (default True)
 ```
 
 ## Planned Features
