@@ -168,6 +168,8 @@ if __name__ == "__main__":
         display_text_font=args.font,
         display_text_position=args.pos,
     )
+    p.p(3, f"Music File: {Path(args.music_file).expanduser()}")
+    p.p(3, f"Image File: {Path(args.image_file).expanduser()}")
     p.p(3, f"ffprobe: {vidinfo.ffprobe_path}")
     p.p(3, f"Song: {vidinfo.song_title}")
     p.p(3, f"Album: {vidinfo.song_album}")
