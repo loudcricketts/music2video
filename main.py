@@ -123,6 +123,18 @@ def parseArguments() -> argparse.Namespace:
         help="Add extra time to the end of the video",
         default=0,
     )
+    parse.add_argument(
+        "--verbosity",
+        metavar="VERBOSITY_LEVEL",
+        help="How verbose to print (between 0 and 3)",
+        default=3,
+    )
+    parse.add_argument(
+        "--timestamps",
+        metavar="BOOL",
+        help="Show timestamps on output (default True)",
+        default=True,
+    )
     return parse.parse_args()
 
 
@@ -130,7 +142,7 @@ def parseArguments() -> argparse.Namespace:
 if __name__ == "__main__":
     args = parseArguments()
     # Pretty printing!
-    p = Printer(logging_level=3, show_timestamp=True)
+    p = Printer(logging_level=args.verbosity, show_timestamp=True)
     # Gather and calculate the data needed to create the video
     vidinfo = MusicVideo(
         music_file=Path(args.music_file).expanduser(),

@@ -35,6 +35,7 @@ class MusicVideo:
             )
             .stdout.decode()
             .replace("\n", "")
+            .replace("\r", "")
         )
         # Get the song title from the music file, unless specified
         if song_title:
