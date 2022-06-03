@@ -179,9 +179,12 @@ if __name__ == "__main__":
         f"FFMPEG Command: {' '.join(vidgen.beginning_command_fragment + vidgen.file_command_fragment + vidgen.filter_command_fragment + vidgen.encoder_command_fragment + vidgen.final_command_fragment)}",
     )
     p.p(3, f"Generating Video")
-    p.p(2, vidgen.make_video().stderr.decode())
-    # p.p(1, "A sample error message!")
-    # p.p(2, "A sample warning message!")
-    # p.p(3, "A sample info message!")
+    results = vidgen.make_video()
+    err_results = results.stderr.decode().splitlines()
+    normal_results = results.stdout.decode().splitlines()
+    for line in err_results:
+        p.p(2, line)
+    for line in normal_results:
+        p.p(3, line)
     p.p(3, f"Done!")
     exit(0)
