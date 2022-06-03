@@ -12,18 +12,21 @@ class VideoGenerator:
         output_directory: Path = Path("~/Videos/").expanduser(),
         display_text: str = None,
         display_text_position: str = "top",
+        display_text_font: str = "Noto Sans",
         vertical_resolution: int = 1080,
         video_fps: float = 0.5,
         video_codec_parameters: str = "libx264 -qp 20",
         audio_codec_parameters: str = "flac",
         video_file_container: str = "mkv",
-        added_video_end_length: float = 0.0,
+        added_video_end_length: int = 0,
     ):
         self.vidinfo: MusicVideo = vidinfo
         self.ffmpeg_path: str = str(ffmpeg_path)
         self.video_fps: float = video_fps
         self.vertical_resolution: int = vertical_resolution
         self.display_text: str = display_text
+        self.end_padding: int = int(added_video_end_length)
+        self.font_pos: str
         # Create the ffmpeg command, to be used by run()
         self.beginning_command_fragment: list() = [
             self.ffmpeg_path,
@@ -40,11 +43,11 @@ class VideoGenerator:
             "-i",
             f"file:{str(self.vidinfo.cover_file)}",
             "-t",
-            str(math.ceil(float(vidinfo.song_length))),
+            str(math.ceil(float(vidinfo.song_length) + self.end_padding)),
             "-i",
             f"file:{str(self.vidinfo.music_file)}",
             "-t",
-            str(math.ceil(float(vidinfo.song_length))),
+            str(math.ceil(float(vidinfo.song_length) + self.end_padding)),
         ]
         self.filter_command_fragment: list() = [
             "-filter_complex",
@@ -58,7 +61,16 @@ class VideoGenerator:
                 .replace("TITLE", vidinfo.song_title)
                 .replace("ALBUM", vidinfo.song_album)
             )
-            self.filter_list += f";[video]drawtext=text={self.display_text}:font=Noto Sans:fontsize=h/42:fontcolor=white:x=(w-text_w)/2:y=(text_h/2):expansion=none[video]"
+            match display_text_position:
+                case "top":
+                    self.font_pos = "x=(w-text_w)/2:y=(text_h/2)"
+                case "bottom":
+                    self.font_pos = "x=(w-text_w)/2:y=(h-text_h)-text_h/2"
+                case _:
+                    print("incorrect display text position")
+                    exit(1)
+
+            self.filter_list += f";[video]drawtext=text={self.display_text}:font={display_text_font}:fontsize=h/42:fontcolor=white:{self.font_pos}:expansion=none[video]"
         self.filter_command_fragment.append(self.filter_list)
         self.encoder_command_fragment: list() = [
             "-map",

@@ -27,6 +27,102 @@ def parseArguments() -> argparse.Namespace:
         help="Path to the image to use",
         default="image.webp",
     )
+    parse.add_argument(
+        "--title",
+        metavar="TRACK_TITLE",
+        help="Optional title override",
+        default=None,
+    )
+    parse.add_argument(
+        "--artist",
+        metavar="TRACK_ARTIST",
+        help="Optional artist override",
+        default=None,
+    )
+    parse.add_argument(
+        "--album",
+        metavar="TRACK_ALBUM",
+        help="Optional album override",
+        default=None,
+    )
+    parse.add_argument(
+        "--format",
+        metavar="CUSTOM_FORMAT_STRING",
+        help="Create a custom output format (Use TITLE, ARTIST, ALBUM as placeholders.)",
+        default="[ARTIST] TITLE",
+    )
+    parse.add_argument(
+        "--ffprobe",
+        metavar="CUSTOM_FFPROBE_PATH",
+        help="Use a custom path for ffprobe.",
+        default="ffprobe",
+    )
+    parse.add_argument(
+        "--ffmpeg",
+        metavar="CUSTOM_FFMPEG_PATH",
+        help="Use a custom path for ffmpeg.",
+        default="ffmpeg",
+    )
+    parse.add_argument(
+        "--outdir",
+        metavar="OUTPUT_DIRECTORY",
+        help="Output directory for videos",
+        default="~/Videos",
+    )
+    parse.add_argument(
+        "--fps",
+        metavar="FPS_FLOAT",
+        help="FPS for output video (Can be below 1!)",
+        default=0.5,
+    )
+    parse.add_argument(
+        "--vres",
+        metavar="VERTICAL_RESOLUTION_INT",
+        help="Vertical Resolution for video (e.g. 480, 720, 1080)",
+        default=1080,
+    )
+    parse.add_argument(
+        "--display-text",
+        metavar="TEXT",
+        help="Create a custom embeded text field on video (Use TITLE, ARTIST, ALBUM as placeholders.)",
+        default="TITLE",
+    )
+    parse.add_argument(
+        "--font",
+        metavar="FONT_NAME",
+        help="Use a particular font for display text",
+        default="Noto Sans",
+    )
+    parse.add_argument(
+        "--pos",
+        metavar="TEXT_POSITION",
+        help='Where to display the text ("top" or "bottom")',
+        default="top",
+    )
+    parse.add_argument(
+        "--video-codec",
+        metavar="VIDEO_CODEC_PARAMS",
+        help='Use the specified encoder with parameters (e.g. "libx264 -qp 20")',
+        default="libx264 -qp 20",
+    )
+    parse.add_argument(
+        "--audio-codec",
+        metavar="AUDIO_CODEC_PARAMS",
+        help='Use the specified encoder with parameters (e.g. "flac")',
+        default="flac",
+    )
+    parse.add_argument(
+        "--container",
+        metavar="FILE_CONTAINER",
+        help="Use the specified container format (mkv is a good choice)",
+        default="mkv",
+    )
+    parse.add_argument(
+        "--end-padding",
+        metavar="PADDING_IN_SECONDS",
+        help="Add extra time to the end of the video",
+        default=0,
+    )
     return parse.parse_args()
 
 
@@ -39,13 +135,28 @@ if __name__ == "__main__":
     vidinfo = MusicVideo(
         music_file=Path(args.music_file).expanduser(),
         cover_file=Path(args.image_file).expanduser(),
-        output_basename_format="⟦ARTIST⟧ ❰TITLE❱",
-        # song_title="TestTitle",
-        # song_artist="TestArtist",
-        # song_album="TestAlbum",
+        output_basename_format=args.format,
+        song_title=args.title,
+        song_artist=args.artist,
+        song_album=args.album,
+        ffprobe_path=Path(args.ffprobe).expanduser(),
     )
     # Prepare for video creation
-    vidgen = VideoGenerator(vidinfo, display_text="TITLE")
+    vidgen = VideoGenerator(
+        vidinfo,
+        display_text=args.display_text,
+        ffmpeg_path=Path(args.ffmpeg).expanduser(),
+        output_directory=Path(args.outdir).expanduser(),
+        video_fps=float(args.fps),
+        vertical_resolution=int(args.vres),
+        video_codec_parameters=args.video_codec,
+        audio_codec_parameters=args.audio_codec,
+        video_file_container=args.container,
+        added_video_end_length=args.end_padding,
+        display_text_font=args.font,
+        display_text_position=args.pos,
+    )
+    p.p(3, f"ffprobe: {vidinfo.ffprobe_path}")
     p.p(3, f"Song: {vidinfo.song_title}")
     p.p(3, f"Album: {vidinfo.song_album}")
     p.p(3, f"Artist: {vidinfo.song_artist}")
