@@ -3,14 +3,6 @@ A python package and program that will generate a customizable still-image music
 
 ```
 usage: main.py [-h] [-m FILE] [-i FILE] [--title TRACK_TITLE] [--artist TRACK_ARTIST] [--album TRACK_ALBUM] [--format CUSTOM_FORMAT_STRING]
-               [--ffprobe CUSTOM_FFPROBE_PATH] [--ffmpeg CUSTOM_FFMPEG_PATH] [--outdir OUTPUT_DIRECTORY] [--fps FPS_FLOAT]
-               [--vres VERTICAL_RESOLUTION_INT] [--display-text TEXT] [--font FONT_NAME] [--pos TEXT_POSITION] [--video-codec VIDEO_CODEC_PARAMS]
-               [--audio-codec AUDIO_CODEC_PARAMS] [--container FILE_CONTAINER] [--end-padding PADDING_IN_SECONDS]
-
-Quickly create still image music videos
-
-options:
-usage: main.py [-h] [-m FILE] [-i FILE] [--title TRACK_TITLE] [--artist TRACK_ARTIST] [--album TRACK_ALBUM] [--format CUSTOM_FORMAT_STRING]
                [--ffprobe CUSTOM_FFPROBE_PATH] [--ffmpeg CUSTOM_FFMPEG_PATH] [--outdir OUTPUT_DIRECTORY] [--fps FPS_FLOAT] [--vres VERTICAL_RESOLUTION_INT]
                [--display-text TEXT] [--font FONT_NAME] [--pos TEXT_POSITION] [--video-codec VIDEO_CODEC_PARAMS] [--audio-codec AUDIO_CODEC_PARAMS]
                [--container FILE_CONTAINER] [--end-padding PADDING_IN_SECONDS] [--verbosity VERBOSITY_LEVEL] [--timestamps BOOL]
