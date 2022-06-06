@@ -1,20 +1,23 @@
 #!/usr/bin/env python
 import PySimpleGUI as sg
+from pathlib import Path
+from src.music2video.musicvideo import MusicVideo
+from src.music2video.generator import VideoGenerator
 
 sg.theme("Dark Amber")
 layout = [
-    [sg.Text("WIP Gui for music2video", size=64, justification="center")],
+    [sg.Text("WIP Gui for music2video", size=100, justification="center")],
     [
         sg.Text("Container Format"),
-        sg.DropDown(
+        sg.Combo(
             ["mkv", "webp", "mp4"],
-            key="-SELECTION-",
+            key="-CONTAINER-",
             readonly=True,
             default_value="mkv",
             size=8,
         ),
         sg.Text("FPS"),
-        sg.DropDown(
+        sg.Combo(
             [0.5, 1, 2, 6, 12, 24, 30, 60],
             key="-FPS-",
             readonly=False,
@@ -40,6 +43,15 @@ layout = [
             default_text="Enter File Path",
         ),
     ],
+    [
+        sg.Text("Display Text"),
+        sg.Input(
+            size=32,
+            key="-DISPLAY_TEXT-",
+            default_text="TITLE",
+        ),
+    ],
+    [sg.Button("Create", key="-CREATE-")],
 ]
 
 window = sg.Window("music2video GUI", layout)
@@ -48,6 +60,17 @@ while True:
     event, values = window.read()
     if event == sg.WIN_CLOSED:
         break
-    # if event == "-MUSIC_SELECT-":
-    # window["-MUSIC_STRING-"].update(values["-MUSIC_SELECT-"])
-    #   print(window["-MUSIC_STRING-"])
+    if event == "-CREATE-":
+        print(values)
+        vidinfo = MusicVideo(
+            music_file=Path(values["-MUSIC_STRING-"]).expanduser(),
+            cover_file=Path(values["-IMAGE_STRING-"]).expanduser(),
+        )
+        vidgen = VideoGenerator(
+            vidinfo=vidinfo,
+            display_text=values["-DISPLAY_TEXT-"],
+            video_fps=values["-FPS-"],
+            video_file_container=values["-CONTAINER-"],
+        )
+        print(vidgen.make_video().stderr.decode())
+        print("hello")
